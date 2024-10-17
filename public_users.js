@@ -1,19 +1,15 @@
-// public_users.js
+// Get all books by a specific author
+public_users.get('/author/:author', (req, res) => {
+    const author = req.params.author.toLowerCase();
 
-const express = require('express');
-let books = require("./booksdb.js"); // Importing the books data
-const public_users = express.Router();
+    // Filter books where the author matches (case-insensitive)
+    const booksByAuthor = Object.values(books).filter((book) => 
+        book.author.toLowerCase() === author
+    );
 
-// Get the book based on ISBN
-public_users.get('/isbn/:isbn', (req, res) => {
-    const ISBN = req.params.isbn;
-
-    // Check if the book exists in the books database
-    if (books[ISBN]) {
-        return res.status(200).json(books[ISBN]);
+    if (booksByAuthor.length > 0) {
+        return res.status(200).json(booksByAuthor);
     } else {
-        return res.status(404).json({ message: "Book not found" });
+        return res.status(404).json({ message: "No books found by this author" });
     }
 });
-
-module.exports.general = public_users;
