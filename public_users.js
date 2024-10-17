@@ -1,15 +1,20 @@
-// Get all books by a specific author
-public_users.get('/author/:author', (req, res) => {
-    const author = req.params.author.toLowerCase();
+// public_users.js
 
-    // Filter books where the author matches (case-insensitive)
-    const booksByAuthor = Object.values(books).filter((book) => 
-        book.author.toLowerCase() === author
-    );
+const express = require('express');
+let books = require("./booksdb.js");
+const public_users = express.Router();
 
-    if (booksByAuthor.length > 0) {
-        return res.status(200).json(booksByAuthor);
-    } else {
-        return res.status(404).json({ message: "No books found by this author" });
+// Get all books using an async callback function
+public_users.get('/books', async (req, res) => {
+    try {
+        // Simulating an asynchronous operation, e.g., fetching from a database
+        const allBooks = await new Promise((resolve) => {
+            resolve(Object.values(books)); // Resolve with the array of book objects
+        });
+        return res.status(200).json(allBooks); // Send the books array in response
+    } catch (error) {
+        return res.status(500).json({ message: "Error retrieving books" });
     }
 });
+
+module.exports.general = public_users;
